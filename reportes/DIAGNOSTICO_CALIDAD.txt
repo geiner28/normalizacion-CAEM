@@ -1,0 +1,170 @@
+DIAGNÓSTICO DE CALIDAD DE DATOS
+Fecha: 2026-04-07 23:16:31
+Original: pyc_embargos  →  ETL: ETL
+
+======================================================================
+  0. CREAR dim_entidad_bancaria EN ETL
+======================================================================
+  Entidades bancarias en pyc_embargos: 5
+    id=1, nombre=CITIBANK
+    id=2, nombre=SANTANDER
+    id=3, nombre=COOPCENTRAL
+    id=4, nombre=COLPATRIA
+    id=5, nombre=FALABELLA
+  Tabla dim_entidad_bancaria ya existe
+
+======================================================================
+  1. COMPARACIÓN DE CONTEOS
+======================================================================
+
+--- Embargos / Oficios ---
+  Original (todos): 929,690
+  Original (deleted=0): 914,153
+  ETL fact_oficios: 916,425
+  Diferencia vs no-eliminados: 2,272 (+0.25%) ✅
+  Demandados en original: 2,372,831
+  Demandantes en original: 938,625
+
+======================================================================
+  2. INTEGRIDAD REFERENCIAL EN ETL
+======================================================================
+  dim_municipios → dim_departamentos: 0 rotas ✅
+  dim_entidades → dim_municipios: 0 rotas ✅
+  dim_entidades → dim_departamentos: 0 rotas ✅
+  dim_variantes → dim_entidades: 0 rotas ✅
+  fact_oficios → dim_entidades: 0 rotas ✅
+  fact_oficios → dim_municipios: 0 rotas ✅
+  fact_oficios → dim_departamentos: 0 rotas ✅
+  fact_oficios → dim_entidad_bancaria: 0 rotas ✅
+
+  INTEGRIDAD REFERENCIAL GENERAL: TODAS LAS FK VÁLIDAS ✅
+
+======================================================================
+  3. CRUCE DE IDs ENTRE ETL Y ORIGINAL
+======================================================================
+  IDs en ETL: 916,425
+  IDs ETL que NO existen en original: 0 ✅
+  IDs originales (activos) que NO están en ETL: 41 ⚠️
+  Ejemplos de IDs faltantes en ETL:
+    ('24091700740', 'JUZGADO 78 CIVIL MUNICPAL ahora', 'SIN_CONFIRMAR', datetime.date(2024, 9, 16))
+    ('24091700742', 'GOBERNACIÓN DEL ATLÁNTICO', 'SIN_CONFIRMAR', datetime.date(2024, 8, 24))
+    ('24091700743', 'Juzgado Dieciocho De Pequeñas Causas Y Competencia Múltiple De Barranquilla Barranquilla', 'SIN_CONFIRMAR', datetime.date(2024, 7, 25))
+    ('24091700746', 'Ministerio del Trabajo', 'SIN_CONFIRMAR', datetime.date(2024, 9, 9))
+    ('24091700747', 'Ministerio del Trabajo', 'SIN_CONFIRMAR', datetime.date(2024, 9, 9))
+    ('24091700751', 'JUZGADO QUINTO DE PEQUEÑAS CAUSAS Y COMPETENCIA MÚLTIPLE DE', 'SIN_CONFIRMAR', datetime.date(2024, 9, 2))
+    ('24091700755', 'JUZGADO CUARENTA Y UNO DE PEQUEÑAS CAUSAS Y COMPETENCIA', 'SIN_CONFIRMAR', datetime.date(2024, 9, 10))
+    ('24091700767', 'JUZGADO CUARENTA Y UNO DE PEQUEÑAS CAUSAS Y COMPETENCIA', 'SIN_CONFIRMAR', datetime.date(2024, 4, 30))
+    ('24091700769', 'Ministerio del Trabajo', 'SIN_CONFIRMAR', datetime.date(2024, 9, 2))
+    ('24091700774', 'Juzgado Tercero Civil Municipal de Ejecución', 'SIN_CONFIRMAR', datetime.date(2024, 9, 16))
+  IDs eliminados que están en ETL: 2,313 ⚠️
+
+======================================================================
+  4. VERIFICACIÓN DE CAMPOS CLAVE (MUESTREO 10,000 REGISTROS)
+======================================================================
+
+--- Resultados por campo ---
+  estado: 10,000/10,000 coinciden (100.00%) ✅
+  entidad_bancaria_id: 10,000/10,000 coinciden (100.00%) ✅
+  fecha_oficio: 10,000/10,000 coinciden (100.00%) ✅
+  monto: 917/917 coinciden (100.00%) ✅
+  ciudad_municipio: 8,942/9,976 coinciden (89.64%) ❌
+      Ejemplo: ID=23091402298: ETL='Girón' vs ORIG='GIRO'
+      Ejemplo: ID=24082103400: ETL='Bogotá D.C.' vs ORIG='BOGOTA D.C'
+      Ejemplo: ID=23121200720: ETL='Cúcuta' vs ORIG='CUCUTA'
+      Ejemplo: ID=24020800706: ETL='Montería' vs ORIG='MONTERIA CORDOBA'
+      Ejemplo: ID=23060801430: ETL='Medellín' vs ORIG='MEDELLIN'
+
+  Total registros comparados: 10,000
+
+======================================================================
+  5. VERIFICACIÓN DE NORMALIZACIÓN DE ENTIDAD REMITENTE
+======================================================================
+  Entidades cuyo nombre normalizado coincide con original: 4,988/5,000 (99.76%) ✅
+  Ejemplos de posible discrepancia:
+    ID=24022701439: ETL='Instituto Municipal de Tránsito y Transporte de Clemencia' ← ORIG='DEPARTAMENTO DE  CLEMENCIA BOLIVAR'
+    ID=24090600457: ETL='Dirección Seccional de Bucaramanga' ← ORIG='ÁREA METROPOLITANA DE BUCARAMANGA'
+    ID=23121301399: ETL='Juzgado Trece de Pequeñas Causas y Competencia Múlupie Distrito Judicial de Barranquilla' ← ORIG='JUZGADO 13 DE PEQUEÑAS CAUSAS Y COMPETENCIAS MULTIPLES DE BARRANQUILLA'
+    ID=23060600523: ETL='Hospital César Uribe Piedrahita' ← ORIG='Gobierno del Cesar'
+    ID=24031100838: ETL='Hospital César Uribe Piedrahita' ← ORIG='DEPARTAMENTO DEL CESAR'
+
+======================================================================
+  6. VERIFICACIÓN DE DEMANDADOS EN OFICIOS
+======================================================================
+
+--- Coincidencia de demandados ---
+  Nombre demandado coincide: 5,000/5,000 (100.00%) ✅
+  ID demandado coincide: 5,000/5,000 (100.00%) ✅
+
+======================================================================
+  7. COMPARACIÓN DE DISTRIBUCIÓN DE ESTADOS
+======================================================================
+
+  Estado                             Original          ETL       Diff    %Diff
+  ------------------------------ ------------ ------------ ---------- --------
+  CONFIRMADO                          457,888      459,465     +1,577    +0.3%
+  EN_PROCESO                                3            3         +0    +0.0%
+  PROCESADO                           426,556      427,067       +511    +0.1%
+  PROCESADO_CON_ERRORES                   136          136         +0    +0.0%
+  RECONFIRMADO                         29,529       29,754       +225    +0.8%
+  SIN_CONFIRMAR                            41            0        -41  -100.0%
+  TOTAL                               914,153      916,425     +2,272
+
+======================================================================
+  8. COMPARACIÓN POR ENTIDAD BANCARIA
+======================================================================
+
+  Entidad Bancaria         Original          ETL       Diff    %Diff
+  -------------------- ------------ ------------ ---------- --------
+  COLPATRIA                 406,990      407,716       +726    +0.2%
+  COOPCENTRAL               124,324      124,732       +408    +0.3%
+  FALABELLA                 182,365      182,994       +629    +0.3%
+  SANTANDER                 200,474      200,983       +509    +0.3%
+
+======================================================================
+  9. COMPARACIÓN DE MONTOS AGREGADOS
+======================================================================
+
+--- Monto (embargo) ---
+  Métrica                                         Original                       ETL
+  ------------------------------ ------------------------- -------------------------
+  SUM                            104,623,422,515,521,979.00 104,623,441,723,408,959.00
+  AVG                                 1,169,264,204,782.43      1,168,376,496,140.63
+  MIN                                                 0.00                      0.00
+  MAX                            28,594,000,900,609,481.00 28,594,000,900,609,480.00
+  COUNT (>0)                                     89,464.00                 89,532.00
+
+--- Monto a embargar (agregado) ---
+  Original (SUM demandado.montoaembargar): 1,191,447,977,246,789,456.13
+  ETL (SUM fact_oficios.monto_a_embargar): 177,086,863,309,896,791.58
+  Diferencia porcentual: 85.1368% ❌
+
+======================================================================
+  10. COBERTURA DE DIMENSIONES EN ETL
+======================================================================
+  Con entidad remitente: 916,425/916,425 (100.0%)
+  Con entidad bancaria: 916,425/916,425 (100.0%)
+  Con municipio: 914,578/916,425 (99.8%)
+  Con departamento: 915,320/916,425 (99.9%)
+  Con nombre demandado: 915,022/916,425 (99.8%)
+  Con fecha oficio: 916,425/916,425 (100.0%)
+  Con monto > 0: 89,532/916,425 (9.8%)
+  Con número oficio: 799,194/916,425 (87.2%)
+
+======================================================================
+  RESUMEN EJECUTIVO
+======================================================================
+
+  Base original: pyc_embargos (embargos, demandante, demandado, entidad_bancaria)
+  Modelo ETL: ETL (dim_departamentos, dim_municipios, dim_entidades,
+              dim_variantes, dim_entidad_bancaria, fact_oficios)
+
+  Este diagnóstico verifica:
+    1. Conteos entre original y ETL
+    2. Integridad referencial (todas las FK)
+    3. Cruce de IDs 1:1 entre embargos y fact_oficios
+    4. Coincidencia de campos clave (muestreo)
+    5. Normalización correcta de entidades remitentes
+    6. Preservación de datos de demandados
+    7-8. Distribuciones consistentes (estados, bancos)
+    9. Montos agregados consistentes
+    10. Cobertura de dimensiones

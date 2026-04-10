@@ -1,0 +1,895 @@
+municipio_id,nombre_municipio,departamento
+1,Abejorral,Antioquia
+2,Acacías,Meta
+3,Acandí,Chocó
+4,Acevedo,Huila
+5,Achí,Bolívar
+6,Agrado,Huila
+7,Agua de Dios,Cundinamarca
+8,Aguachica,Cesar
+9,Aguada,Santander
+10,Aguadas,Caldas
+11,Aguazul,Casanare
+12,Agustín Codazzi,Cesar
+13,Aipe,Huila
+14,Albania,La Guajira
+15,Albán,Cundinamarca
+16,Alcalá,Valle del Cauca
+17,Aldana,Nariño
+18,Algarrobo,Magdalena
+19,Algeciras,Huila
+20,Almaguer,Cauca
+21,Almeida,Boyacá
+22,Alpujarra,Tolima
+23,Altamira,Huila
+24,Altos del Rosario,Bolívar
+25,Alvarado,Tolima
+26,Amagá,Antioquia
+27,Amalfi,Antioquia
+28,Ambalema,Tolima
+29,Anapoima,Cundinamarca
+30,Ancuyá,Nariño
+31,Andalucía,Valle del Cauca
+32,Andes,Antioquia
+33,Angostura,Antioquia
+34,Anolaima,Cundinamarca
+35,Anorí,Antioquia
+36,Anserma,Caldas
+37,Ansermanuevo,Valle del Cauca
+38,Anzoátegui,Tolima
+39,Apartadó,Antioquia
+40,Apulo,Cundinamarca
+41,Apía,Risaralda
+42,Aquitania,Boyacá
+43,Aracataca,Magdalena
+44,Aranzazu,Caldas
+45,Aratoca,Santander
+46,Arauquita,Arauca
+47,Arbeláez,Cundinamarca
+48,Arboleda,Nariño
+49,Arboledas,Norte de Santander
+50,Arboletes,Antioquia
+51,Arcabuco,Boyacá
+52,Arenal,Bolívar
+53,Argelia,Valle del Cauca
+54,Ariguaní,Magdalena
+55,Arjona,Bolívar
+56,Armenia,Quindío
+57,Armero,Tolima
+58,Arroyohondo,Bolívar
+59,Astrea,Cesar
+60,Ataco,Tolima
+61,Ayapel,Córdoba
+62,Bahía Solano,Chocó
+63,Bajo Baudó,Chocó
+64,Balboa,Risaralda
+65,Baranoa,Atlántico
+66,Baraya,Huila
+67,Barbacoas,Nariño
+68,Barbosa,Antioquia
+69,Barbosa,Santander
+70,Barichara,Santander
+71,Barranca de Upía,Meta
+72,Barrancabermeja,Santander
+73,Barrancas,La Guajira
+74,Barranquilla,Atlántico
+75,Becerril,Cesar
+76,Belalcázar,Caldas
+77,Bello,Antioquia
+78,Belmira,Antioquia
+79,Beltrán,Cundinamarca
+80,Belén,Boyacá
+81,Belén de Umbría,Risaralda
+82,Belén de los Andaquíes,Caquetá
+83,Betania,Antioquia
+84,Betulia,Santander
+85,Boavita,Boyacá
+86,Bochalema,Norte de Santander
+87,Bogotá,"Bogotá, D.C."
+88,Bogotá,Cundinamarca
+89,Bogotá D.C.,Cundinamarca
+90,Bojacá,Cundinamarca
+91,Bojayá,Chocó
+92,Bosconia,Cesar
+93,Briceño,Boyacá
+94,Bucaramanga,Santander
+95,Bucarasica,Norte de Santander
+96,Buenaventura,Valle del Cauca
+97,Buenavista,Boyacá
+98,Buenavista,Sucre
+99,Buenos Aires,Cauca
+100,Buesaco,Nariño
+101,Buga,Valle del Cauca
+102,Bugalagrande,Valle del Cauca
+103,Cabrera,Cundinamarca
+104,Cabuyaro,Meta
+105,Cachipay,Cundinamarca
+106,Caicedo,Antioquia
+107,Caicedonia,Valle del Cauca
+108,Caimito,Sucre
+109,Cajamarca,Tolima
+110,Cajibío,Cauca
+111,Cajicá,Cundinamarca
+112,Calamar,Bolívar
+113,Calarcá,Quindío
+114,Caldas,Antioquia
+115,Caldono,Cauca
+116,Cali,Valle del Cauca
+117,California,Santander
+118,Calima,Valle del Cauca
+119,Caloto,Cauca
+120,Campo de la Cruz,Atlántico
+121,Campoalegre,Huila
+122,Canalete,Córdoba
+123,Candelaria,Atlántico
+124,Candelaria,Valle del Cauca
+125,Cantagallo,Bolívar
+126,Caparrapí,Cundinamarca
+127,Caramanta,Antioquia
+128,Carcasí,Santander
+129,Carepa,Antioquia
+130,Carmen de Apicalá,Tolima
+131,Carmen de Carupa,Cundinamarca
+132,Carolina del Príncipe,Antioquia
+133,Cartagena de Indias,Bolívar
+134,Cartagena del Chairá,Caquetá
+135,Cartago,Valle del Cauca
+136,Casabianca,Tolima
+137,Castilla la Nueva,Meta
+138,Caucasia,Antioquia
+139,Cañasgordas,Antioquia
+140,Cepitá,Santander
+141,Cereté,Córdoba
+142,Cerrito,Santander
+143,Cerro de San Antonio,Magdalena
+144,Chachagüí,Nariño
+145,Chaguaní,Cundinamarca
+146,Chalán,Sucre
+147,Chaparral,Tolima
+148,Charalá,Santander
+149,Charta,Santander
+150,Chibolo,Magdalena
+151,Chigorodó,Antioquia
+152,Chima,Santander
+153,Chimichagua,Cesar
+154,Chimá,Córdoba
+155,Chinchiná,Caldas
+156,Chinácota,Norte de Santander
+157,Chinú,Córdoba
+158,Chipaque,Cundinamarca
+159,Chiquinquirá,Boyacá
+160,Chiriguaná,Cesar
+161,Chita,Boyacá
+162,Chitagá,Norte de Santander
+163,Chitaraque,Boyacá
+164,Choachí,Cundinamarca
+165,Chocontá,Cundinamarca
+166,Chámeza,Casanare
+167,Chía,Cundinamarca
+168,Chíquiza,Boyacá
+169,Cicuco,Bolívar
+170,Cimitarra,Santander
+171,Circasia,Quindío
+172,Ciudad Bolívar,Antioquia
+173,Ciénaga,Magdalena
+174,Ciénaga de Oro,Córdoba
+175,Ciénega,Boyacá
+176,Clemencia,Bolívar
+177,Coello,Tolima
+178,Cogua,Cundinamarca
+179,Colombia,Huila
+180,Colosó,Sucre
+181,Colón,Putumayo
+182,Concepción,Antioquia
+183,Concepción,Santander
+184,Concordia,Antioquia
+185,Concordia,Magdalena
+186,Condoto,Chocó
+187,Confines,Santander
+188,Consacá,Nariño
+189,Contadero,Nariño
+190,Contratación,Santander
+191,Convención,Norte de Santander
+192,Copacabana,Antioquia
+193,Corinto,Cauca
+194,Coromoro,Santander
+195,Corozal,Sucre
+196,Corrales,Boyacá
+197,Cota,Cundinamarca
+198,Cotorra,Córdoba
+199,Covarachía,Boyacá
+200,Coveñas,Sucre
+201,Coyaima,Tolima
+202,Cravo Norte,Arauca
+203,Cuaspud,Nariño
+204,Cubarral,Meta
+205,Cucunubá,Cundinamarca
+206,Cucutilla,Norte de Santander
+207,Cumaral,Meta
+208,Cumaribo,Vichada
+209,Cumbal,Nariño
+210,Cunday,Tolima
+211,Curillo,Caquetá
+212,Curití,Santander
+213,Curumaní,Cesar
+214,Cuítiva,Boyacá
+215,Cáchira,Norte de Santander
+216,Cácota,Norte de Santander
+217,Cáqueza,Cundinamarca
+218,Cómbita,Boyacá
+219,Cúcuta,Norte de Santander
+220,Dabeiba,Antioquia
+221,Dagua,Valle del Cauca
+222,Dibulla,La Guajira
+223,Distracción,La Guajira
+224,Dolores,Tolima
+225,Donmatías,Antioquia
+226,Dosquebradas,Risaralda
+227,Duitama,Boyacá
+228,Duranía,Norte de Santander
+229,El Bagre,Antioquia
+230,El Banco,Magdalena
+231,El Cairo,Valle del Cauca
+232,El Calvario,Meta
+233,El Carmen,Norte de Santander
+234,El Carmen de Atrato,Chocó
+235,El Carmen de Bolívar,Bolívar
+236,El Carmen de Chucurí,Santander
+237,El Carmen de Viboral,Antioquia
+238,El Castillo,Meta
+239,El Cerrito,Valle del Cauca
+240,El Charco,Nariño
+241,El Cocuy,Boyacá
+242,El Colegio,Cundinamarca
+243,El Copey,Cesar
+244,El Doncello,Caquetá
+245,El Dorado,Meta
+246,El Dovio,Valle del Cauca
+247,El Espinal,Tolima
+248,El Espino,Boyacá
+249,El Guamo,Bolívar
+250,El Molino,La Guajira
+251,El Paso,Cesar
+252,El Paujil,Caquetá
+253,El Peñol,Nariño
+254,El Peñón,Cundinamarca
+255,El Pital,Huila
+256,El Piñón,Magdalena
+257,El Playón,Santander
+258,El Retorno,Guaviare
+259,El Retén,Magdalena
+260,El Roble,Sucre
+261,El Rosal,Cundinamarca
+262,El Rosario,Nariño
+263,El Santuario,Antioquia
+264,El Socorro,Santander
+265,El Tablón,Nariño
+266,El Tambo,Cauca
+267,El Tambo,Nariño
+268,El Tarra,Norte de Santander
+269,El Zulia,Norte de Santander
+270,El Águila,Valle del Cauca
+271,Elías,Huila
+272,Enciso,Santander
+273,Entrerríos,Antioquia
+274,Envigado,Antioquia
+275,Facatativá,Cundinamarca
+276,Falán,Tolima
+277,Filadelfia,Caldas
+278,Filandia,Quindío
+279,Firavitoba,Boyacá
+280,Flandes,Tolima
+281,Florencia,Caquetá
+282,Floresta,Boyacá
+283,Florida,Valle del Cauca
+284,Floridablanca,Santander
+285,Fonseca,La Guajira
+286,Fortul,Arauca
+287,Fosca,Cundinamarca
+288,Francisco Pizarro,Nariño
+289,Fredonia,Antioquia
+290,Fresno,Tolima
+291,Frontino,Antioquia
+292,Fundación,Magdalena
+293,Funes,Nariño
+294,Funza,Cundinamarca
+295,Fusagasugá,Cundinamarca
+296,Fómeque,Cundinamarca
+297,Fúquene,Cundinamarca
+298,Gachalá,Cundinamarca
+299,Gachancipá,Cundinamarca
+300,Gachantivá,Boyacá
+301,Gachetá,Cundinamarca
+302,Galapa,Atlántico
+303,Galeras,Sucre
+304,Galán,Santander
+305,Gama,Cundinamarca
+306,Gamarra,Cesar
+307,Garagoa,Boyacá
+308,Garzón,Huila
+309,Gigante,Huila
+310,Ginebra,Valle del Cauca
+311,Giraldo,Antioquia
+312,Girardot,Cundinamarca
+313,Girardota,Antioquia
+314,Girón,Santander
+315,González,Cesar
+316,Gramalote,Norte de Santander
+317,Granada,Cundinamarca
+318,Granada,Meta
+319,Guaca,Santander
+320,Guacarí,Valle del Cauca
+321,Guachené,Cauca
+322,Guachetá,Cundinamarca
+323,Guachucal,Nariño
+324,Guadalupe,Huila
+325,Guaduas,Cundinamarca
+326,Gualmatán,Nariño
+327,Guamal,Magdalena
+328,Guamo,Tolima
+329,Guapí,Cauca
+330,Guaranda,Sucre
+331,Guasca,Cundinamarca
+332,Guatapé,Antioquia
+333,Guataquí,Cundinamarca
+334,Guatavita,Cundinamarca
+335,Guateque,Boyacá
+336,Guavatá,Santander
+337,Guayabal de Síquima,Cundinamarca
+338,Guayabetal,Cundinamarca
+339,Gutiérrez,Cundinamarca
+340,Guática,Risaralda
+341,Gámeza,Boyacá
+342,Génova,Quindío
+343,Güepsa,Santander
+344,Hatillo de Loba,Bolívar
+345,Hato,Santander
+346,Hato Corozal,Casanare
+347,Hatonuevo,La Guajira
+348,Heliconia,Antioquia
+349,Herveo,Tolima
+350,Hispania,Antioquia
+351,Hobo,Huila
+352,Honda,Tolima
+353,Ibagué,Tolima
+354,Icononzo,Tolima
+355,Iles,Nariño
+356,Imués,Nariño
+357,Inzá,Cauca
+358,Inírida,Guainía
+359,Ipiales,Nariño
+360,Isnos,Huila
+361,Istmina,Chocó
+362,Itagüí,Antioquia
+363,Jambaló,Cauca
+364,Jamundí,Valle del Cauca
+365,Jardín,Antioquia
+366,Jenesano,Boyacá
+367,Jericó,Antioquia
+368,Jericó,Boyacá
+369,Jerusalén,Cundinamarca
+370,Jesús María,Santander
+371,Juan de Acosta,Atlántico
+372,Junín,Cundinamarca
+373,La Apartada,Córdoba
+374,La Argentina,Huila
+375,La Belleza,Santander
+376,La Calera,Cundinamarca
+377,La Capilla,Boyacá
+378,La Ceja,Antioquia
+379,La Celia,Risaralda
+380,La Cruz,Nariño
+381,La Cumbre,Valle del Cauca
+382,La Dorada,Caldas
+383,La Esperanza,Norte de Santander
+384,La Estrella,Antioquia
+385,La Florida,Nariño
+386,La Jagua de Ibirico,Cesar
+387,La Jagua del Pilar,La Guajira
+388,La Llanada,Nariño
+389,La Macarena,Meta
+390,La Merced,Caldas
+391,La Mesa,Cundinamarca
+392,La Montañita,Caquetá
+393,La Palma,Cundinamarca
+394,La Paz,Cesar
+395,La Peña,Cundinamarca
+396,La Pintada,Antioquia
+397,La Plata,Huila
+398,La Primavera,Vichada
+399,La Tebaida,Quindío
+400,La Unión,Nariño
+401,La Unión,Valle del Cauca
+402,La Vega,Cundinamarca
+403,La Victoria,Valle del Cauca
+404,La Virginia,Risaralda
+405,Labateca,Norte de Santander
+406,Landázuri,Santander
+407,Lebrija,Santander
+408,Leiva,Nariño
+409,Lejanías,Meta
+410,Lenguazaque,Cundinamarca
+411,Leticia,Amazonas
+412,Lorica,Córdoba
+413,Los Córdobas,Córdoba
+414,Los Palmitos,Sucre
+415,Los Patios,Norte de Santander
+416,Los Santos,Santander
+417,Luruaco,Atlántico
+418,Lérida,Tolima
+419,Líbano,Tolima
+420,López de Micay,Cauca
+421,Macanal,Boyacá
+422,Machetá,Cundinamarca
+423,Madrid,Cundinamarca
+424,Magangué,Bolívar
+425,Magüí Payán,Nariño
+426,Maicao,La Guajira
+427,Majagual,Sucre
+428,Malambo,Atlántico
+429,Manatí,Atlántico
+430,Manaure,La Guajira
+431,Manizales,Caldas
+432,Manta,Cundinamarca
+433,Manzanares,Caldas
+434,Maní,Casanare
+435,Mapiripán,Meta
+436,Margarita,Bolívar
+437,Marinilla,Antioquia
+438,Mariquita,Tolima
+439,Marmato,Caldas
+440,Marquetalia,Caldas
+441,Marsella,Risaralda
+442,Marulanda,Caldas
+443,María la Baja,Bolívar
+444,Matanza,Santander
+445,Medellín,Antioquia
+446,Medina,Cundinamarca
+447,Melgar,Tolima
+448,Mercaderes,Cauca
+449,Mesetas,Meta
+450,Miraflores,Boyacá
+451,Miranda,Cauca
+452,Mistrató,Risaralda
+453,Mitú,Vaupés
+454,Mocoa,Putumayo
+455,Mogotes,Santander
+456,Molagavita,Santander
+457,Momil,Córdoba
+458,Mompox,Bolívar
+459,Mongua,Boyacá
+460,Moniquirá,Boyacá
+461,Montecristo,Bolívar
+462,Montelíbano,Córdoba
+463,Montenegro,Quindío
+464,Monterrey,Casanare
+465,Montería,Córdoba
+466,Morales,Bolívar
+467,Morroa,Sucre
+468,Mosquera,Cundinamarca
+469,Motavita,Boyacá
+470,Moñitos,Córdoba
+471,Mutatá,Antioquia
+472,Muzo,Boyacá
+473,Málaga,Santander
+474,Nariño,Nariño
+475,Natagaima,Tolima
+476,Neira,Caldas
+477,Neiva,Huila
+478,Nemocón,Cundinamarca
+479,Nilo,Cundinamarca
+480,Nobsa,Boyacá
+481,Nocaima,Cundinamarca
+482,Norcasia,Caldas
+483,Norosí,Bolívar
+484,Nueva Granada,Magdalena
+485,Nuevo Colón,Boyacá
+486,Nunchía,Casanare
+487,Nuquí,Chocó
+488,Nátaga,Huila
+489,Obando,Valle del Cauca
+490,Ocamonte,Santander
+491,Ocaña,Norte de Santander
+492,Oiba,Santander
+493,Oicatá,Boyacá
+494,Olaya Herrera,Nariño
+495,Onzaga,Santander
+496,Oporapa,Huila
+497,Orito,Putumayo
+498,Orocué,Casanare
+499,Ortega,Tolima
+500,Ospina,Nariño
+501,Otanche,Boyacá
+502,Ovejas,Sucre
+503,Pacho,Cundinamarca
+504,Padilla,Cauca
+505,Paicol,Huila
+506,Pailitas,Cesar
+507,Paime,Cundinamarca
+508,Paipa,Boyacá
+509,Pajarito,Boyacá
+510,Palermo,Huila
+511,Palestina,Caldas
+512,Palmar de Varela,Atlántico
+513,Palmas del Socorro,Santander
+514,Palmira,Valle del Cauca
+515,Palocabildo,Tolima
+516,Pamplona,Norte de Santander
+517,Pamplonita,Norte de Santander
+518,Panqueba,Boyacá
+519,Paratebueno,Cundinamarca
+520,Pasca,Cundinamarca
+521,Pasto,Nariño
+522,Patía,Cauca
+523,Pauna,Boyacá
+524,Paz de Ariporo,Casanare
+525,Pedraza,Magdalena
+526,Pelaya,Cesar
+527,Pensilvania,Caldas
+528,Peque,Antioquia
+529,Pereira,Risaralda
+530,Pesca,Boyacá
+531,Piamonte,Cauca
+532,Piedecuesta,Santander
+533,Piendamó,Cauca
+534,Pijao,Quindío
+535,Pijiño del Carmen,Magdalena
+536,Pinchote,Santander
+537,Pinillos,Bolívar
+538,Piojó,Atlántico
+539,Pitalito,Huila
+540,Pivijay,Magdalena
+541,Planadas,Tolima
+542,Planeta Rica,Córdoba
+543,Plato,Magdalena
+544,Policarpa,Nariño
+545,Polonuevo,Atlántico
+546,Ponedera,Atlántico
+547,Popayán,Cauca
+548,Pore,Casanare
+549,Potosí,Nariño
+550,Pradera,Valle del Cauca
+551,Prado,Tolima
+552,Providencia,Nariño
+553,Providencia y Santa Catalina Islas,San Andrés y Providencia
+554,Pueblo Bello,Cesar
+555,Pueblo Nuevo,Córdoba
+556,Pueblo Rico,Risaralda
+557,Pueblo Viejo,Magdalena
+558,Pueblorrico,Antioquia
+559,Puebloviejo,Magdalena
+560,Puente Nacional,Santander
+561,Puerres,Nariño
+562,Puerto Asís,Putumayo
+563,Puerto Berrío,Antioquia
+564,Puerto Boyacá,Boyacá
+565,Puerto Caicedo,Putumayo
+566,Puerto Carreño,Vichada
+567,Puerto Colombia,Atlántico
+568,Puerto Concordia,Meta
+569,Puerto Escondido,Córdoba
+570,Puerto Gaitán,Meta
+571,Puerto Guzmán,Putumayo
+572,Puerto Leguízamo,Putumayo
+573,Puerto Libertador,Córdoba
+574,Puerto Lleras,Meta
+575,Puerto López,Meta
+576,Puerto Nare,Antioquia
+577,Puerto Nariño,Amazonas
+578,Puerto Parra,Santander
+579,Puerto Rico,Caquetá
+580,Puerto Rico,Meta
+581,Puerto Rondón,Arauca
+582,Puerto Salgar,Cundinamarca
+583,Puerto Santander,Norte de Santander
+584,Puerto Tejada,Cauca
+585,Puerto Triunfo,Antioquia
+586,Puerto Wilches,Santander
+587,Pulí,Cundinamarca
+588,Pupiales,Nariño
+589,Purificación,Tolima
+590,Purísima,Córdoba
+591,Pácora,Caldas
+592,Páez,Boyacá
+593,Páramo,Santander
+594,Quebradanegra,Cundinamarca
+595,Quetame,Cundinamarca
+596,Quibdó,Chocó
+597,Quimbaya,Quindío
+598,Quinchía,Risaralda
+599,Quipile,Cundinamarca
+600,Quípama,Boyacá
+601,Ramiriquí,Boyacá
+602,Recetor,Casanare
+603,Regidor,Bolívar
+604,Remedios,Antioquia
+605,Remolino,Magdalena
+606,Repelón,Atlántico
+607,Restrepo,Meta
+608,Ricaurte,Cundinamarca
+609,Rioblanco,Tolima
+610,Riofrío,Valle del Cauca
+611,Riohacha,La Guajira
+612,Rionegro,Antioquia
+613,Rionegro,Santander
+614,Riosucio,Caldas
+615,Rivera,Huila
+616,Roldanillo,Valle del Cauca
+617,Roncesvalles,Tolima
+618,Rosas,Cauca
+619,Rovira,Tolima
+620,Ráquira,Boyacá
+621,Río Viejo,Bolívar
+622,Río de Oro,Cesar
+623,Sabana de Torres,Santander
+624,Sabanagrande,Atlántico
+625,Sabanalarga,Atlántico
+626,Sabanalarga,Casanare
+627,Sabanas de San Ángel,Magdalena
+628,Sabaneta,Antioquia
+629,Saboyá,Boyacá
+630,Sahagún,Córdoba
+631,Saladoblanco,Huila
+632,Salamina,Caldas
+633,Saldaña,Tolima
+634,Salento,Quindío
+635,Salgar,Antioquia
+636,Samacá,Boyacá
+637,Samaniego,Nariño
+638,Samaná,Caldas
+639,Sampués,Sucre
+640,San Agustín,Huila
+641,San Alberto,Cesar
+642,San Andrés de Cuerquia,Antioquia
+643,San Andrés de Sotavento,Córdoba
+644,San Antero,Córdoba
+645,San Antonio,Tolima
+646,San Antonio de Palmito,Sucre
+647,San Antonio del Tequendama,Cundinamarca
+648,San Benito,Santander
+649,San Benito Abad,Sucre
+650,San Bernardo,Cundinamarca
+651,San Bernardo del Viento,Córdoba
+652,San Carlos,Córdoba
+653,San Carlos de Guaroa,Meta
+654,San Cayetano,Cundinamarca
+655,San Cristóbal,Bolívar
+656,San Diego,Cesar
+657,San Eduardo,Boyacá
+658,San Estanislao,Bolívar
+659,San Fernando,Bolívar
+660,San Francisco,Antioquia
+661,San Francisco,Cundinamarca
+662,San Gil,Santander
+663,San Jacinto,Bolívar
+664,San Jacinto del Cauca,Bolívar
+665,San Jerónimo,Antioquia
+666,San Joaquín,Santander
+667,San José,Caldas
+668,San José de Albán,Nariño
+669,San José de Miranda,Santander
+670,San José de Pare,Boyacá
+671,San José del Fragua,Caquetá
+672,San José del Guaviare,Guaviare
+673,San Juan Nepomuceno,Bolívar
+674,San Juan de Arama,Meta
+675,San Juan de Betulia,Sucre
+676,San Juan de Rioseco,Cundinamarca
+677,San Juan del Cesar,La Guajira
+678,San Juanito,Meta
+679,San Lorenzo,Nariño
+680,San Luis,Antioquia
+681,San Luis,Tolima
+682,San Luis de Gaceno,Boyacá
+683,San Luis de Palenque,Casanare
+684,San Marcos,Sucre
+685,San Martín,Cesar
+686,San Martín,Meta
+687,San Martín de Loba,Bolívar
+688,San Mateo,Boyacá
+689,San Miguel,Putumayo
+690,San Miguel de Sema,Boyacá
+691,San Onofre,Sucre
+692,San Pablo,Bolívar
+693,San Pedro,Valle del Cauca
+694,San Pedro de Cartago,Nariño
+695,San Pedro de Urabá,Antioquia
+696,San Pedro de los Milagros,Antioquia
+697,San Pelayo,Córdoba
+698,San Rafael,Antioquia
+699,San Roque,Antioquia
+700,San Sebastián,Cauca
+701,San Sebastián de Buenavista,Magdalena
+702,San Vicente,Antioquia
+703,San Vicente de Chucurí,Santander
+704,San Vicente del Caguán,Caquetá
+705,Sandoná,Nariño
+706,Santa Ana,Magdalena
+707,Santa Bárbara,Antioquia
+708,Santa Bárbara,Santander
+709,Santa Bárbara de Pinto,Magdalena
+710,Santa Catalina,Bolívar
+711,Santa Fe de Antioquia,Antioquia
+712,Santa Helena del Opón,Santander
+713,Santa Isabel,Tolima
+714,Santa Lucía,Atlántico
+715,Santa Marta,Magdalena
+716,Santa María,Huila
+717,Santa Rosa,Cauca
+718,Santa Rosa de Cabal,Risaralda
+719,Santa Rosa de Osos,Antioquia
+720,Santa Rosa de Viterbo,Boyacá
+721,Santa Rosa del Sur,Bolívar
+722,Santa Rosalía,Vichada
+723,Santa Sofía,Boyacá
+724,Santana,Boyacá
+725,Santander de Quilichao,Cauca
+726,Santiago,Norte de Santander
+727,Santo Domingo,Antioquia
+728,Santo Tomás,Atlántico
+729,Santuario,Risaralda
+730,Sapuyes,Nariño
+731,Saravena,Arauca
+732,Sardinata,Norte de Santander
+733,Sasaima,Cundinamarca
+734,Sativasur,Boyacá
+735,Segovia,Antioquia
+736,Sesquilé,Cundinamarca
+737,Sevilla,Valle del Cauca
+738,Siachoque,Boyacá
+739,Sibaté,Cundinamarca
+740,Sibundoy,Putumayo
+741,Silvania,Cundinamarca
+742,Silvia,Cauca
+743,Simacota,Santander
+744,Simijaca,Cundinamarca
+745,Simití,Bolívar
+746,Sincelejo,Sucre
+747,Sincé,Sucre
+748,Sitionuevo,Magdalena
+749,Soacha,Cundinamarca
+750,Soatá,Boyacá
+751,Socha,Boyacá
+752,Sogamoso,Boyacá
+753,Soledad,Atlántico
+754,Solita,Caquetá
+755,Somondoco,Boyacá
+756,Sonsón,Antioquia
+757,Soplaviento,Bolívar
+758,Sopó,Cundinamarca
+759,Sora,Boyacá
+760,Soracá,Boyacá
+761,Sotaquirá,Boyacá
+762,Suaita,Santander
+763,Suaza,Huila
+764,Subachoque,Cundinamarca
+765,Suesca,Cundinamarca
+766,Supía,Caldas
+767,Suratá,Santander
+768,Susa,Cundinamarca
+769,Susacón,Boyacá
+770,Sutamarchán,Boyacá
+771,Sutatausa,Cundinamarca
+772,Suán,Atlántico
+773,Suárez,Cauca
+774,Sácama,Casanare
+775,Sáchica,Boyacá
+776,Tabio,Cundinamarca
+777,Tadó,Chocó
+778,Talaigua Nuevo,Bolívar
+779,Tamalameque,Cesar
+780,Tame,Arauca
+781,Taminango,Nariño
+782,Tangua,Nariño
+783,Tarazá,Antioquia
+784,Tarqui,Huila
+785,Tasco,Boyacá
+786,Tauramena,Casanare
+787,Tausa,Cundinamarca
+788,Tello,Huila
+789,Tena,Cundinamarca
+790,Tenerife,Magdalena
+791,Tenjo,Cundinamarca
+792,Teorama,Norte de Santander
+793,Teruel,Huila
+794,Tesalia,Huila
+795,Tibacuy,Cundinamarca
+796,Tibaná,Boyacá
+797,Tibasosa,Boyacá
+798,Tibirita,Cundinamarca
+799,Tibú,Norte de Santander
+800,Tierralta,Córdoba
+801,Timaná,Huila
+802,Timbiquí,Cauca
+803,Timbío,Cauca
+804,Tinjacá,Boyacá
+805,Tipacoque,Boyacá
+806,Tiquisio,Bolívar
+807,Tocaima,Cundinamarca
+808,Tocancipá,Cundinamarca
+809,Toledo,Antioquia
+810,Tolú Viejo,Sucre
+811,Tona,Santander
+812,Topaipí,Cundinamarca
+813,Toribío,Cauca
+814,Toro,Valle del Cauca
+815,Tota,Boyacá
+816,Trinidad,Casanare
+817,Trujillo,Valle del Cauca
+818,Tubará,Atlántico
+819,Tuchín,Córdoba
+820,Tuluá,Valle del Cauca
+821,Tumaco,Nariño
+822,Tunja,Boyacá
+823,Turbaco,Bolívar
+824,Turbaná,Bolívar
+825,Turbo,Antioquia
+826,Turmequé,Boyacá
+827,Tuta,Boyacá
+828,Tutazá,Boyacá
+829,Támara,Casanare
+830,Támesis,Antioquia
+831,Tópaga,Boyacá
+832,Túquerres,Nariño
+833,Ubalá,Cundinamarca
+834,Ubaque,Cundinamarca
+835,Ubaté,Cundinamarca
+836,Ulloa,Valle del Cauca
+837,Une,Cundinamarca
+838,Unguía,Chocó
+839,Unión Panamericana,Chocó
+840,Uramita,Antioquia
+841,Uribia,La Guajira
+842,Urrao,Antioquia
+843,Urumita,La Guajira
+844,Usiacurí,Atlántico
+845,Valencia,Córdoba
+846,Valle de San José,Santander
+847,Valle de San Juan,Tolima
+848,Valle del Guamuez,Putumayo
+849,Valledupar,Cesar
+850,Venadillo,Tolima
+851,Venecia,Cundinamarca
+852,Ventaquemada,Boyacá
+853,Versalles,Valle del Cauca
+854,Vetas,Santander
+855,Vianí,Cundinamarca
+856,Victoria,Caldas
+857,Vigía del Fuerte,Antioquia
+858,Vijes,Valle del Cauca
+859,Villa Rica,Cauca
+860,Villa de Leyva,Boyacá
+861,Villa del Rosario,Norte de Santander
+862,Villagarzón,Putumayo
+863,Villagómez,Cundinamarca
+864,Villamaría,Caldas
+865,Villanueva,Casanare
+866,Villanueva,La Guajira
+867,Villapinzón,Cundinamarca
+868,Villavicencio,Meta
+869,Villavieja,Huila
+870,Villeta,Cundinamarca
+871,Viotá,Cundinamarca
+872,Viracachá,Boyacá
+873,Vista Hermosa,Meta
+874,Viterbo,Caldas
+875,Vélez,Santander
+876,Yacopí,Cundinamarca
+877,Yacuanquer,Nariño
+878,Yaguará,Huila
+879,Yolombó,Antioquia
+880,Yondó,Antioquia
+881,Yopal,Casanare
+882,Yotoco,Valle del Cauca
+883,Yumbo,Valle del Cauca
+884,Zambrano,Bolívar
+885,Zapatoca,Santander
+886,Zapayán,Magdalena
+887,Zarzal,Valle del Cauca
+888,Zetaquira,Boyacá
+889,Zipacón,Cundinamarca
+890,Zipaquirá,Cundinamarca
+891,Zona Bananera,Magdalena
+892,Ábrego,Norte de Santander
+893,Íquira,Huila
+894,Útica,Cundinamarca
