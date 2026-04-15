@@ -89,6 +89,11 @@ DDL_STATEMENTS = [
         municipio_id           INT,
         departamento_id        INT,
         fuente_ubicacion       VARCHAR(30),
+        referencia             VARCHAR(200),
+        expediente             VARCHAR(200),
+        created_at             DATETIME,
+        confirmed_at           DATETIME,
+        processed_at           DATETIME,
         FOREIGN KEY (entidad_remitente_id) REFERENCES dim_entidades(entidad_id),
         FOREIGN KEY (municipio_id)         REFERENCES dim_municipios(municipio_id),
         FOREIGN KEY (departamento_id)      REFERENCES dim_departamentos(departamento_id),
@@ -213,8 +218,9 @@ def load_oficios(cursor):
               titulo_orden, monto, monto_a_embargar, nombre_demandado,
               id_demandado, tipo_id_demandado, direccion_remitente,
               correo_remitente, nombre_funcionario, municipio_id,
-              departamento_id, fuente_ubicacion)
-             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+              departamento_id, fuente_ubicacion,
+              referencia, expediente, created_at, confirmed_at, processed_at)
+             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
     batch = []
     batch_size = 10000
@@ -244,6 +250,11 @@ def load_oficios(cursor):
                 safe_int(r.get("municipio_id")),
                 safe_int(r.get("departamento_id")),
                 safe_str(r.get("fuente_ubicacion")),
+                safe_str(r.get("referencia")),
+                safe_str(r.get("expediente")),
+                safe_str(r.get("created_at")),
+                safe_str(r.get("confirmed_at")),
+                safe_str(r.get("processed_at")),
             )
             batch.append(row)
             if len(batch) >= batch_size:

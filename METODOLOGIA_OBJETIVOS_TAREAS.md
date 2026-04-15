@@ -1,5 +1,5 @@
 # Desarrollo de software A-GD-04
-## Metodología, Objetivos y Tareas Ejecutadas — VERSION 01
+## Metodología, Objetivos y Tareas Ejecutadas — VERSION 02
 ### ABR-2026
 
 ---
@@ -22,6 +22,7 @@
 | Fecha | Descripción | Autor |
 |---|---|---|
 | 2026-04-09 | Documentación inicial de metodología y tareas | Geiner Martínez |
+| 2026-04-14 | v02 — Inclusión de 5 nuevos campos en pipeline, reestructuración del maestro de entidades (judiciales/coactivas), actualización del modelo en línea | Geiner Martínez |
 
 ---
 
@@ -42,6 +43,9 @@ Diseñar e implementar un pipeline ETL que transforme los datos crudos de oficio
 | 5 | Construir un modelo dimensional estrella con tablas de dimensiones (departamentos, municipios, entidades, variantes) y hechos (oficios) | ✅ Completado |
 | 6 | Validar la integridad referencial del modelo y comparar conteos con la base de datos original | ✅ Completado |
 | 7 | Cargar el modelo final a MySQL y ejecutar deduplicación de registros | ✅ Completado |
+| 8 | Incluir los campos referencia, expediente, created_at, confirmed_at y processed_at en el pipeline de normalización y modelo dimensional | ✅ Completado (v02) |
+| 9 | Reestructurar el maestro de entidades dividiéndolo en Entidades Judiciales y Entidades Coactivas con esquemas diferenciados | ✅ Completado (v02) |
+| 10 | Actualizar el modelo en línea (MySQL) con los nuevos campos y datos re-procesados | ✅ Completado (v02) |
 
 ---
 
@@ -183,7 +187,39 @@ Se adoptó un enfoque de **ETL por lotes (batch pipeline)** implementado en Pyth
 | **Salida** | 5 tablas en esquema ETL de MySQL |
 | **Actividades** | Ejecución de DDL (DROP + CREATE con FK e índices), carga batch (INSERT) tabla por tabla en orden de dependencias, manejo de errores por registro |
 
-### Tarea 10: Deduplicación de oficios
+### Tarea 10: Inclusión de nuevos campos en el pipeline (v02)
+
+| Atributo | Detalle |
+|---|---|
+| **Scripts modificados** | `normalize_v4.py`, `build_modelo.py`, `upload_to_mysql.py` |
+| **Campos agregados** | referencia, expediente, created_at, confirmed_at, processed_at |
+| **Origen de datos** | referencia: embargos.csv col 27; expediente: demandado.csv col 5; created_at: embargos.csv col 6; confirmed_at: embargos.csv col 3; processed_at: embargos.csv col 25 |
+| **Actividades** | Mapeo de columnas por índice en archivos fuente, extracción durante normalización en normalize_v4.py (header de 21→26 columnas), propagación a través del pipeline (DictReader transparente), ampliación de fact_oficios de 20 a 25 campos en build_modelo.py, actualización de DDL e INSERT en upload_to_mysql.py |
+| **Resultado** | 916,425 registros con los 5 nuevos campos disponibles en el modelo dimensional y en MySQL |
+
+### Tarea 11: Reestructuración del maestro de entidades (v02)
+
+| Atributo | Detalle |
+|---|---|
+| **Script creado** | `split_entidades.py` (nuevo, ~310 líneas) |
+| **Entrada** | `dim_entidades.csv` (8,548 entidades) + `fact_oficios.csv` (916,425 oficios) |
+| **Salida** | `dim_entidades_judiciales.csv` (6,578) + `dim_entidades_coactivas.csv` (1,970) |
+| **Criterio de clasificación** | Tipos judiciales: JUZGADO, TRIBUNAL, CORTE, RAMA_JUDICIAL, FISCALIA, OFICINA_APOYO, CENTRO_SERVICIOS, DIRECCION_EJECUTIVA. Todo lo demás: coactiva |
+| **Campos judiciales** | id_entidad, nombre_normalizado, tipo, subtipo, municipio, departamento, codigo_sierju, nombre_sierju, especialidad, email |
+| **Campos coactivas** | id_entidad, nombre_normalizado, tipo, subtipo, municipio, departamento, email, categoria_funcional |
+| **Enriquecimiento** | Extracción de emails del campo `email_juzgado` de fact_oficios (7,545 entidades con email), extracción de `numero_despacho` del nombre normalizado, matching fuzzy contra directorio SIERJU (threshold 0.7) |
+| **Resultado** | 6,578 judiciales (76.9%) + 1,970 coactivas (23.1%). 0 registros sin clasificar |
+
+### Tarea 12: Actualización del modelo en línea MySQL (v02)
+
+| Atributo | Detalle |
+|---|---|
+| **Script** | `upload_to_mysql.py` (modificado) |
+| **Conexión** | Cloud SQL Proxy → `caem-embargos-test:us-east4:pyc-embargos-bd-prod` vía localhost:3306 |
+| **Actividades** | DDL actualizado con 5 nuevos campos (referencia VARCHAR(200), expediente VARCHAR(200), created_at/confirmed_at/processed_at DATETIME), re-creación de tablas, carga completa del modelo re-procesado |
+| **Resultado** | dim_departamentos: 33, dim_municipios: 1,104, dim_entidades: 8,548, dim_variantes: 38,289, fact_oficios: 916,425. Carga exitosa sin errores |
+
+### Tarea 13: Deduplicación de oficios
 
 | Atributo | Detalle |
 |---|---|
@@ -192,7 +228,7 @@ Se adoptó un enfoque de **ETL por lotes (batch pipeline)** implementado en Pyth
 | **Salida** | Tabla fact_oficios deduplicada |
 | **Actividades** | Agrupación por clave compuesta de 6 campos, priorización por estado (PROCESADO > RECONFIRMADO > CONFIRMADO), eliminación de duplicados conservando el registro más reciente con mejor estado |
 
-### Tarea 11: Diagnóstico de calidad y validación
+### Tarea 14: Diagnóstico de calidad y validación
 
 | Atributo | Detalle |
 |---|---|
@@ -228,20 +264,34 @@ Se adoptó un enfoque de **ETL por lotes (batch pipeline)** implementado en Pyth
 | Registros en fact_oficios | 916,425 |
 | Registros deduplicados | 0 duplicados restantes |
 
-### 5.3 Entregables producidos
+### 5.3 Métricas v02 — Nuevos campos y reestructuración
+
+| Métrica | Valor |
+|---|---|
+| Campos agregados a fact_oficios | 5 (referencia, expediente, created_at, confirmed_at, processed_at) |
+| Total de campos en fact_oficios | 25 |
+| Entidades judiciales | 6,578 (76.9%) |
+| Entidades coactivas | 1,970 (23.1%) |
+| Entidades con email extraído | 7,545 de 8,548 (88.3%) |
+| Registros re-cargados a MySQL | 916,425 fact_oficios + 48,974 dimensiones |
+| Errores de carga | 0 |
+
+### 5.4 Entregables producidos
 
 | Entregable | Ubicación |
 |---|---|
 | Modelo dimensional (5 tablas CSV + DDL) | `datos/modelo_final/` |
+| Tablas derivadas de entidades (judiciales + coactivas) | `datos/procesados/` |
 | Datos intermedios (entidades, variantes, embargos procesados) | `datos/procesados/` |
 | Datos fuente (DANE, municipios) | `datos/fuentes/` |
-| Scripts del pipeline (10 scripts) | `scripts/` |
+| Scripts del pipeline (11 scripts) | `scripts/` |
 | Metodología de normalización | `reportes/METODOLOGIA_NORMALIZACION.md` |
 | Diagnóstico de calidad | `reportes/DIAGNOSTICO_CALIDAD.txt` |
 | Informe de normalización | `reportes/INFORME_NORMALIZACION.txt` |
 | Sugerencias de duplicados | `reportes/sugerencias_normalizacion.csv` |
-| Documentación del código (A-GD-04) | `DOCUMENTACION_CODIGO.md` |
-| Diccionario de datos | `DICCIONARIO_DATOS.md` |
+| Documentación del código (A-GD-04) v02 | `DOCUMENTACION_CODIGO.md` |
+| Diccionario de datos v02 | `DICCIONARIO_DATOS.md` |
+| Metodología y objetivos v02 | `METODOLOGIA_OBJETIVOS_TAREAS.md` |
 
 ---
 
@@ -255,3 +305,68 @@ Se adoptó un enfoque de **ETL por lotes (batch pipeline)** implementado en Pyth
 | 4 | Ordinales compuestos con errores de digitación | Algunos no se normalizan correctamente | Se cubrieron 85+ variantes, pero pueden existir combinaciones no contempladas |
 | 5 | Municipios homónimos entre departamentos | Posible asignación incorrecta | Se implementó tabla de resolución de ambigüedades para los casos más frecuentes |
 | 6 | CSV grandes no versionados en Git | fact_oficios.csv y embargos.csv excluidos del repo | Se incluye schema.sql para regenerar la estructura y los scripts para reproducir los datos |
+
+---
+
+## 7. CAMBIOS IMPLEMENTADOS EN v02
+
+### 7.1 Requerimiento 1 — Inclusión de 5 nuevos campos
+
+**Solicitud:** Incluir los campos `referencia` (tabla embargos), `expediente` (tabla demandado), `created_at` (tabla embargos), `confirmed_at` (tabla embargos) y `processed_at` (tabla embargos) en el pipeline de normalización y en el modelo dimensional.
+
+**Implementación:**
+
+| Componente | Cambio realizado |
+|---|---|
+| `normalize_v4.py` | Se identificaron las columnas por índice en los CSV fuente: referencia=col27, created_at=col6, confirmed_at=col3, processed_at=col25 (embargos.csv), expediente=col5 (demandado.csv). Se agregó la extracción durante la fase de normalización, expandiendo el header de salida de 21 a 26 columnas |
+| `build_modelo.py` | Se actualizó `build_oficios()` para propagar los 5 campos con `row.get()` (seguro ante valores ausentes). El fieldnames del CSV writer pasó de 20 a 25 campos. El DDL en schema.sql se amplió con `referencia VARCHAR(200)`, `expediente VARCHAR(200)`, `created_at DATETIME`, `confirmed_at DATETIME`, `processed_at DATETIME` |
+| `upload_to_mysql.py` | Se actualizó el DDL de `fact_oficios` con las 5 columnas nuevas, el INSERT con 25 placeholders `%s`, y la construcción de la tupla de valores para incluir los nuevos campos |
+| `restructure_embargos.py` | No requirió cambios — usa `DictReader`/`DictWriter` por lo que los campos nuevos fluyen automáticamente |
+| `cruce_municipios.py` | No requirió cambios — mismo diseño basado en diccionarios |
+
+**Verificación:** Los 5 campos están presentes en `fact_oficios.csv` (25 columnas) y en la tabla MySQL `fact_oficios` (916,425 filas con 25 columnas).
+
+### 7.2 Requerimiento 2 — Reestructuración del maestro de entidades
+
+**Solicitud:** Dividir `dim_entidades` en dos tablas derivadas:
+- **Entidades Judiciales** (despachos del poder judicial) con campos: id_entidad, nombre_normalizado, tipo, subtipo, municipio, departamento, codigo_sierju, nombre_sierju, especialidad, email
+- **Entidades Coactivas** (entidades administrativas con facultad de cobro coactivo) con campos: id_entidad, nombre_normalizado, tipo, subtipo, municipio, departamento, email, categoria_funcional
+
+**Implementación:**
+
+| Componente | Cambio realizado |
+|---|---|
+| `split_entidades.py` (NUEVO) | Script de ~310 líneas que: (1) clasifica cada entidad como judicial o coactiva según su `tipo`, (2) extrae emails del campo `email_juzgado` de fact_oficios mediante conteo de frecuencia (el email más común por entidad), (3) intenta matching fuzzy contra directorio SIERJU (openpyxl), (4) extrae `numero_despacho` del nombre normalizado |
+| Criterio de clasificación | Tipos judiciales: JUZGADO, TRIBUNAL, CORTE, RAMA_JUDICIAL, FISCALIA, OFICINA_APOYO, CENTRO_SERVICIOS, DIRECCION_EJECUTIVA |
+
+**Resultados:**
+- 6,578 entidades judiciales (76.9%)
+- 1,970 entidades coactivas (23.1%)
+- 7,545 entidades con email extraído (88.3%)
+- 0 entidades sin clasificar
+
+### 7.3 Requerimiento 3 — Actualización del modelo en línea
+
+**Solicitud:** Re-ejecutar el pipeline completo y actualizar la base de datos MySQL en producción.
+
+**Ejecución del pipeline:**
+
+| Paso | Script | Resultado |
+|---|---|---|
+| 1 | `normalize_v4.py` | 929,690 filas procesadas → 8,548 entidades, 38,289 variantes, 894 municipios |
+| 2 | `restructure_embargos.py` | 929,690 → 916,425 (eliminados 13,265 SIN_CONFIRMAR) |
+| 3 | `cruce_municipios.py` | 916,425 oficios enriquecidos (72.5% por entidad, 27.3% por ciudad, 0.2% sin resolver) |
+| 4 | `build_modelo.py` | 5 CSVs generados: 33 deptos, 1,104 municipios, 8,548 entidades, 38,289 variantes, 916,425 oficios (25 cols) |
+| 5 | `split_entidades.py` | 6,578 judiciales + 1,970 coactivas |
+| 6 | `upload_to_mysql.py` | Carga exitosa a MySQL: 964,399 registros totales, 0 errores |
+
+**Verificación MySQL:**
+
+| Tabla | Filas cargadas |
+|---|---|
+| dim_departamentos | 33 |
+| dim_municipios | 1,104 |
+| dim_entidades | 8,548 |
+| dim_variantes | 38,289 |
+| fact_oficios | 916,425 |
+| **Total** | **964,399** |

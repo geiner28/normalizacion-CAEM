@@ -13,7 +13,8 @@ Genera las tablas normalizadas:
                               titulo_embargo, titulo_orden, monto, monto_a_embargar,
                               nombre_demandado, id_demandado, tipo_id_demandado,
                               direccion_remitente, correo_remitente, nombre_funcionario,
-                              municipio_id, departamento_id, fuente_ubicacion)
+                              municipio_id, departamento_id, fuente_ubicacion,
+                              referencia, expediente, created_at, confirmed_at, processed_at)
 
 Todas las tablas van a  modelo_final/
 """
@@ -370,6 +371,11 @@ def build_oficios(embargos_path, depto_lookup, by_name_depto, unique_muni):
                 'municipio_id': muni_id or '',
                 'departamento_id': depto_id or '',
                 'fuente_ubicacion': row['fuente_ubicacion'],
+                'referencia': row.get('referencia', ''),
+                'expediente': row.get('expediente', ''),
+                'created_at': row.get('created_at', ''),
+                'confirmed_at': row.get('confirmed_at', ''),
+                'processed_at': row.get('processed_at', ''),
             })
 
             if total % 100000 == 0:
@@ -469,7 +475,8 @@ def main():
                'titulo_embargo', 'titulo_orden', 'monto', 'monto_a_embargar',
                'nombre_demandado', 'id_demandado', 'tipo_id_demandado',
                'direccion_remitente', 'correo_remitente', 'nombre_funcionario',
-               'municipio_id', 'departamento_id', 'fuente_ubicacion'])
+               'municipio_id', 'departamento_id', 'fuente_ubicacion',
+               'referencia', 'expediente', 'created_at', 'confirmed_at', 'processed_at'])
 
     # ---- RESUMEN ----
     print("\n" + "=" * 70)
@@ -547,6 +554,11 @@ CREATE TABLE IF NOT EXISTS fact_oficios (
     municipio_id           INTEGER,
     departamento_id        INTEGER,
     fuente_ubicacion       VARCHAR(30),
+    referencia             VARCHAR(200),
+    expediente             VARCHAR(200),
+    created_at             DATETIME,
+    confirmed_at           DATETIME,
+    processed_at           DATETIME,
     FOREIGN KEY (entidad_remitente_id) REFERENCES dim_entidades(entidad_id),
     FOREIGN KEY (municipio_id)         REFERENCES dim_municipios(municipio_id),
     FOREIGN KEY (departamento_id)      REFERENCES dim_departamentos(departamento_id)
@@ -556,6 +568,36 @@ CREATE INDEX idx_oficios_estado ON fact_oficios(estado);
 CREATE INDEX idx_oficios_muni ON fact_oficios(municipio_id);
 CREATE INDEX idx_oficios_depto ON fact_oficios(departamento_id);
 CREATE INDEX idx_oficios_fecha ON fact_oficios(fecha_oficio);
+
+-- ============================================================
+-- VISTAS: Maestro de entidades dividido (judicial / coactiva)
+-- ============================================================
+
+CREATE OR REPLACE VIEW vista_entidades_judiciales AS
+SELECT
+    e.entidad_id,
+    e.nombre_normalizado AS nombre_extraido,
+    e.tipo,
+    e.subtipo,
+    m.nombre AS ciudad,
+    e.total_registros
+FROM dim_entidades e
+LEFT JOIN dim_municipios m ON e.municipio_id = m.municipio_id
+WHERE e.tipo IN ('JUZGADO','TRIBUNAL','CORTE','RAMA_JUDICIAL','FISCALIA',
+                 'OFICINA_APOYO','CENTRO_SERVICIOS','DIRECCION_EJECUTIVA');
+
+CREATE OR REPLACE VIEW vista_entidades_coactivas AS
+SELECT
+    e.entidad_id,
+    e.nombre_normalizado AS nombre_extraido,
+    e.tipo,
+    e.subtipo,
+    m.nombre AS ciudad,
+    e.total_registros
+FROM dim_entidades e
+LEFT JOIN dim_municipios m ON e.municipio_id = m.municipio_id
+WHERE e.tipo NOT IN ('JUZGADO','TRIBUNAL','CORTE','RAMA_JUDICIAL','FISCALIA',
+                     'OFICINA_APOYO','CENTRO_SERVICIOS','DIRECCION_EJECUTIVA');
 """
 
     with open(f'{OUTPUT_DIR}/schema.sql', 'w', encoding='utf-8') as f:

@@ -62,6 +62,11 @@ CREATE TABLE IF NOT EXISTS fact_oficios (
     municipio_id           INTEGER,
     departamento_id        INTEGER,
     fuente_ubicacion       VARCHAR(30),
+    referencia             VARCHAR(200),
+    expediente             VARCHAR(200),
+    created_at             DATETIME,
+    confirmed_at           DATETIME,
+    processed_at           DATETIME,
     FOREIGN KEY (entidad_remitente_id) REFERENCES dim_entidades(entidad_id),
     FOREIGN KEY (municipio_id)         REFERENCES dim_municipios(municipio_id),
     FOREIGN KEY (departamento_id)      REFERENCES dim_departamentos(departamento_id)
@@ -71,3 +76,33 @@ CREATE INDEX idx_oficios_estado ON fact_oficios(estado);
 CREATE INDEX idx_oficios_muni ON fact_oficios(municipio_id);
 CREATE INDEX idx_oficios_depto ON fact_oficios(departamento_id);
 CREATE INDEX idx_oficios_fecha ON fact_oficios(fecha_oficio);
+
+-- ============================================================
+-- VISTAS: Maestro de entidades dividido (judicial / coactiva)
+-- ============================================================
+
+CREATE OR REPLACE VIEW vista_entidades_judiciales AS
+SELECT
+    e.entidad_id,
+    e.nombre_normalizado AS nombre_extraido,
+    e.tipo,
+    e.subtipo,
+    m.nombre AS ciudad,
+    e.total_registros
+FROM dim_entidades e
+LEFT JOIN dim_municipios m ON e.municipio_id = m.municipio_id
+WHERE e.tipo IN ('JUZGADO','TRIBUNAL','CORTE','RAMA_JUDICIAL','FISCALIA',
+                 'OFICINA_APOYO','CENTRO_SERVICIOS','DIRECCION_EJECUTIVA');
+
+CREATE OR REPLACE VIEW vista_entidades_coactivas AS
+SELECT
+    e.entidad_id,
+    e.nombre_normalizado AS nombre_extraido,
+    e.tipo,
+    e.subtipo,
+    m.nombre AS ciudad,
+    e.total_registros
+FROM dim_entidades e
+LEFT JOIN dim_municipios m ON e.municipio_id = m.municipio_id
+WHERE e.tipo NOT IN ('JUZGADO','TRIBUNAL','CORTE','RAMA_JUDICIAL','FISCALIA',
+                     'OFICINA_APOYO','CENTRO_SERVICIOS','DIRECCION_EJECUTIVA');

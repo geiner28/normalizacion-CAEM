@@ -1490,6 +1490,7 @@ with open('demandado.csv', 'r', encoding='utf-8', errors='replace') as f:
                     'identificacion': row[7].strip(),
                     'tipo_id': row[17].strip(),
                     'monto_a_embargar': row[10].strip(),
+                    'expediente': row[5].strip(),
                 })
 
 print(f"    {len(demandados):,} embargos with demandado data")
@@ -1505,6 +1506,7 @@ with open('embargos_limpios.csv', 'w', encoding='utf-8', newline='') as f:
         'nombre_demandante', 'id_demandante', 'tipo_id_demandante',
         'nombre_remitente', 'direccion_remitente', 'correo_remitente',
         'nombre_personal_remitente',
+        'referencia', 'expediente', 'created_at', 'confirmed_at', 'processed_at',
     ])
 
     with open('embargos.csv', 'r', encoding='utf-8', errors='replace') as ef:
@@ -1540,14 +1542,21 @@ with open('embargos_limpios.csv', 'w', encoding='utf-8', newline='') as f:
                 id_dem = dem['identificacion']
                 tipo_dem = dem['tipo_id']
                 monto_emb = dem['monto_a_embargar']
+                expediente = dem['expediente']
             else:
-                nombre_dem = id_dem = tipo_dem = monto_emb = ''
+                nombre_dem = id_dem = tipo_dem = monto_emb = expediente = ''
+
+            referencia = row[27].strip() if len(row) > 27 else ''
+            created_at = row[6].strip() if len(row) > 6 else ''
+            confirmed_at = row[3].strip() if len(row) > 3 else ''
+            processed_at = row[25].strip() if len(row) > 25 else ''
 
             writer.writerow([
                 emb_id, ent_id, ebi, row[13].strip(), row[22].strip(),
                 row[15].strip(), row[16].strip(), row[30].strip(), row[29].strip(),
                 row[20].strip(), monto_emb, nombre_dem, id_dem, tipo_dem,
                 '', '', '', nombre_remitente, direccion, correo, funcionario,
+                referencia, expediente, created_at, confirmed_at, processed_at,
             ])
             rows += 1
             if rows % 200000 == 0:

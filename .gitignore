@@ -3,7 +3,11 @@ dashboard/
 
 # Archivos grandes de datos fuente (no se suben a Git)
 datos/fuentes/embargos.csv
+datos/fuentes/embargos_final.csv
+datos/fuentes/embargos_final_old.csv
+datos/fuentes/embargos_limpios.csv
 datos/fuentes/demandado.csv
+datos/fuentes/modelo_final/fact_oficios.csv
 datos/procesados/embargos_final.csv
 datos/modelo_final/fact_oficios.csv
 

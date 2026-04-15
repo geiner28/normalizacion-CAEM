@@ -1,5 +1,5 @@
 # Desarrollo de software A-GD-04
-## Documentación del Código — VERSION 01
+## Documentación del Código — VERSION 02
 ### ABR-2026
 
 ---
@@ -31,6 +31,7 @@
 | 2026-04-01 | v4 — Producción: Gobernaciones por departamento, TF-IDF, desambiguación geográfica | Geiner Martínez |
 | 2026-04-06 | ETL modelo dimensional (5 tablas) + carga a MySQL | Geiner Martínez |
 | 2026-04-07 | Diagnóstico de calidad y deduplicación de oficios | Geiner Martínez |
+| 2026-04-14 | v02 — Nuevos campos en pipeline (referencia, expediente, created_at, confirmed_at, processed_at). División del maestro de entidades en judiciales y coactivas (split_entidades.py) | Geiner Martínez |
 
 ---
 
@@ -42,7 +43,7 @@ Sistema de normalización y modelado de datos para el proceso de embargos del CA
 
 **Lenguaje:** Python 3.13  
 **Base de datos destino:** MySQL 8.x (InnoDB, utf8mb4)  
-**Librerías principales:** csv, json, re, unicodedata (estándar); pymysql (carga a BD)  
+**Librerías principales:** csv, json, re, unicodedata (estándar); pymysql (carga a BD); openpyxl (lectura directorio SIERJU)  
 **Objetivo:** Construir un modelo dimensional estrella que permita análisis geográfico y temporal de embargos por entidad remitente, con integridad referencial completa.
 
 ## 2. ESTRUCTURA DEL CÓDIGO
@@ -63,14 +64,17 @@ normalizacion-CAEM/
 │       ├── dim_departamentos.csv        # 32 departamentos colombianos
 │       ├── dim_municipios.csv           # Municipios con FK a departamentos
 │       ├── dim_entidades.csv            # Entidades normalizadas con tipo/subtipo/ubicación
+│       ├── dim_entidades_judiciales.csv # Entidades de la Rama Judicial (cruce SIERJU)
+│       ├── dim_entidades_coactivas.csv  # Entidades coactivas/administrativas
 │       ├── dim_variantes.csv            # Variantes textuales con FK a entidades
-│       ├── fact_oficios.csv             # 916,425 oficios de embargo (tabla de hechos)
+│       ├── fact_oficios.csv             # 916,425 oficios de embargo (25 campos)
 │       └── schema.sql                   # DDL completo con constraints e índices
 ├── scripts/                             # Pipeline de procesamiento
 │   ├── normalize_v4.py                  # Normalización de entidades (producción)
 │   ├── cruce_municipios.py              # Enriquecimiento geográfico de embargos
 │   ├── restructure_embargos.py          # Limpieza y reestructuración de embargos
 │   ├── build_modelo.py                  # ETL: genera modelo dimensional (5 tablas CSV)
+│   ├── split_entidades.py               # Divide maestro en judiciales y coactivas
 │   ├── dedup_oficios.py                 # Deduplicación de oficios en BD
 │   ├── upload_to_mysql.py               # Carga del modelo a MySQL
 │   ├── diagnostico.py                   # Reporte de tasas de normalización
@@ -122,7 +126,7 @@ El sistema sigue un patrón de **pipeline de datos por lotes** donde cada script
 ### Flujo del pipeline:
 
 ```
-embargos.csv (raw)
+embargos.csv + demandado.csv (raw)
        │
        ▼
 ┌──────────────────────────┐
@@ -130,10 +134,10 @@ embargos.csv (raw)
 │  - Limpieza textual      │  38,289 variantes → 8,548 entidades
 │  - Fingerprinting        │  Clasificación por tipo/subtipo
 │  - Resolución geográfica │  Extracción municipio/departamento
-│  - Agrupación Levenshtein│
+│  - Agrupación Levenshtein│  + referencia, expediente, timestamps
 └──────────┬───────────────┘
            ▼
-   entidades.csv + variantes_entidades.csv
+   entidades.csv + variantes_entidades.csv + embargos_limpios.csv (26 cols)
            │
            ▼
 ┌──────────────────────────┐
@@ -157,24 +161,27 @@ embargos.csv (raw)
 │  build_modelo.py         │  Paso 4: Construcción modelo dimensional
 │  - dim_departamentos     │  Genera 5 tablas CSV normalizadas
 │  - dim_municipios        │  con integridad referencial
-│  - dim_entidades         │
-│  - dim_variantes         │
+│  - dim_entidades         │  fact_oficios: 25 campos (incluye
+│  - dim_variantes         │  referencia, expediente, timestamps)
 │  - fact_oficios          │
 └──────────┬───────────────┘
            ▼
    datos/modelo_final/*.csv + schema.sql
            │
-           ▼
-┌──────────────────────────┐
-│  upload_to_mysql.py      │  Paso 5: Carga a base de datos
-│  - Ejecuta DDL           │  MySQL vía Cloud SQL Proxy
-│  - Bulk INSERT           │
-└──────────┬───────────────┘
-           ▼
-┌──────────────────────────┐
-│  dedup_oficios.py        │  Paso 6: Deduplicación en BD
-│  - Agrupa por clave      │  Prioriza estado PROCESADO
-│    compuesta             │  916,425 → registros únicos
+           ├─────────────────────────────┐
+           ▼                             ▼
+┌──────────────────────────┐  ┌──────────────────────────┐
+│  upload_to_mysql.py      │  │  split_entidades.py      │
+│  - Ejecuta DDL (25 cols) │  │  - Divide dim_entidades  │
+│  - Bulk INSERT           │  │    en judiciales/coactivas│
+│  - MySQL vía Cloud SQL   │  │  - Cruce SIERJU (Excel)  │
+└──────────┬───────────────┘  │  - Fuzzy matching emails  │
+           ▼                  └──────────┬───────────────┘
+┌──────────────────────────┐            ▼
+│  dedup_oficios.py        │  dim_entidades_judiciales.csv
+│  - Agrupa por clave      │  dim_entidades_coactivas.csv
+│    compuesta             │
+│  - Prioriza PROCESADO    │
 └──────────┬───────────────┘
            ▼
 ┌──────────────────────────┐
@@ -191,10 +198,11 @@ embargos.csv (raw)
                          │
                     dim_municipios
                     ╱          ╲
-          dim_entidades    fact_oficios
-               │                │
-          dim_variantes         │
-                         (tabla de hechos)
+          dim_entidades    fact_oficios (25 campos)
+           ╱       │                │
+   judiciales  coactivas           │
+               │            (tabla de hechos)
+          dim_variantes
 ```
 
 **Tablas dimensionales:**
@@ -203,8 +211,12 @@ embargos.csv (raw)
 - `dim_entidades` — 8,548 entidades normalizadas con tipo, subtipo, ubicación (PK: `entidad_id`)
 - `dim_variantes` — 38,289 variantes textuales mapeadas a entidad normalizada (PK: `variante_id`)
 
+**Tablas derivadas (generadas por `split_entidades.py`):**
+- `dim_entidades_judiciales` — Subconjunto judicial con cruce SIERJU (nombre_real, email_real, numero_despacho)
+- `dim_entidades_coactivas` — Subconjunto coactivo/administrativo (NIT, nombre_real, email_real)
+
 **Tabla de hechos:**
-- `fact_oficios` — 916,425 oficios de embargo con FKs a entidades, municipios y departamentos (PK: `oficio_id`)
+- `fact_oficios` — 916,425 oficios de embargo con 25 campos incluyendo referencia, expediente y timestamps (PK: `oficio_id`)
 
 ---
 
@@ -231,12 +243,42 @@ embargos.csv (raw)
 | `build_municipios(json_path, deptos)` | Construye dim_municipios con FK a departamentos | `json_path, deptos` | `list[dict]` |
 | `build_entidades(csv_path, munis, deptos)` | Construye dim_entidades con resolución de FK geográficas | `csv_path, munis, deptos` | `list[dict]` |
 | `build_variantes(csv_path, entidades)` | Construye dim_variantes con FK a entidades | `csv_path, entidades` | `list[dict]` |
-| `build_fact_oficios(csv_path, ...)` | Construye fact_oficios con todas las FK resueltas | `csv_path, ...` | `list[dict]` |
+| `build_fact_oficios(csv_path, ...)` | Construye fact_oficios con todas las FK resueltas (25 campos) | `csv_path, ...` | `list[dict]` |
+
+**Campos nuevos en fact_oficios (v02):**
+
+| Campo | Fuente original | Columna CSV fuente | Descripción |
+|---|---|---|---|
+| `referencia` | embargos.csv | col 27 (`referencia`) | Referencia interna del sistema fuente |
+| `expediente` | demandado.csv | col 5 (`expediente`) | Número de expediente judicial |
+| `created_at` | embargos.csv | col 6 (`create_at`) | Timestamp de creación del registro |
+| `confirmed_at` | embargos.csv | col 3 (`confirmed_at`) | Timestamp de confirmación |
+| `processed_at` | embargos.csv | col 25 (`processed_at`) | Timestamp de procesamiento |
+
+#### `split_entidades.py` — División del maestro de entidades
+| Función | Propósito | Parámetros | Retorno |
+|---|---|---|---|
+| `load_sierju(filepath)` | Carga directorio judicial SIERJU desde Excel exportado | `filepath: str` | `dict` (norm_nombre → entry) |
+| `match_sierju(nombre, municipio, sierju)` | Fuzzy matching entre entidad normalizada y directorio SIERJU | `nombre, municipio, sierju` | `(nombre_real, email_real)` |
+| `load_emails_from_oficios(path)` | Extrae correo más frecuente por entidad desde fact_oficios | `path: str` | `dict` (eid → email) |
+| `extraer_numero_despacho(nombre, subtipo)` | Extrae número ordinal del nombre del despacho | `nombre, subtipo: str` | `str` |
+
+**Clasificación de entidades:**
+
+| Categoría | Tipos incluidos | Campos específicos |
+|---|---|---|
+| **Judiciales** | JUZGADO, TRIBUNAL, CORTE, RAMA_JUDICIAL, FISCALIA, OFICINA_APOYO, CENTRO_SERVICIOS, DIRECCION_EJECUTIVA | `numero_despacho` |
+| **Coactivas** | DIAN, DATT, ALCALDIA, GOBERNACION, SECRETARIA, UGPP, SENA, CAR, SUPERINTENDENCIA, MINISTERIO, y demás | `nit` |
+
+**Validación externa:**
+- Judiciales: [Directorio SIERJU](https://directoriojudicial.ramajudicial.gov.co) (6,823 despachos)
+- Correos institucionales: patrón `{codigo_despacho}@cendoj.ramajudicial.gov.co`
+- Referencia: [Cuentas de correo para notificaciones](https://www.ramajudicial.gov.co/web/informacion/cuentas-de-correo-para-notificaciones)
 
 #### `upload_to_mysql.py` — Carga a base de datos
 | Función | Propósito |
 |---|---|
-| `main()` | Ejecuta DDL (5 tablas con FK e índices) y carga datos via INSERT batch |
+| `main()` | Ejecuta DDL (5 tablas con FK e índices, fact_oficios con 25 campos) y carga datos via INSERT batch |
 
 #### `dedup_oficios.py` — Deduplicación
 | Función | Propósito |
