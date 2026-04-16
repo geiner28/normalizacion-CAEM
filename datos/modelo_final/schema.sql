@@ -1,5 +1,5 @@
 -- ============================================================
--- SCHEMA: Modelo de datos de embargos/oficios
+-- SCHEMA: Modelo de datos de embargos/oficios (v3 - enriquecido)
 -- ============================================================
 
 CREATE TABLE IF NOT EXISTS dim_departamentos (
@@ -18,18 +18,75 @@ CREATE INDEX idx_municipios_depto ON dim_municipios(departamento_id);
 CREATE TABLE IF NOT EXISTS dim_entidades (
     entidad_id          INTEGER PRIMARY KEY,
     nombre_normalizado  VARCHAR(500) NOT NULL,
+    nombre_real         VARCHAR(500),
     tipo                VARCHAR(50),
     subtipo             VARCHAR(50),
+    categoria           VARCHAR(20),
+    nit                 VARCHAR(50),
+    cod_institucion     VARCHAR(50),
+    email               VARCHAR(200),
+    direccion           VARCHAR(500),
+    telefono            VARCHAR(100),
+    ciudad              VARCHAR(150),
     municipio_id        INTEGER,
     departamento_id     INTEGER,
+    orden               VARCHAR(50),
+    sector              VARCHAR(100),
+    naturaleza_juridica VARCHAR(100),
+    estado              VARCHAR(30),
+    representante       VARCHAR(200),
     total_registros     INTEGER DEFAULT 0,
     num_variantes       INTEGER DEFAULT 0,
     FOREIGN KEY (municipio_id)    REFERENCES dim_municipios(municipio_id),
     FOREIGN KEY (departamento_id) REFERENCES dim_departamentos(departamento_id)
 );
-CREATE INDEX idx_entidades_tipo ON dim_entidades(tipo);
-CREATE INDEX idx_entidades_muni ON dim_entidades(municipio_id);
+CREATE INDEX idx_entidades_tipo  ON dim_entidades(tipo);
+CREATE INDEX idx_entidades_cat   ON dim_entidades(categoria);
+CREATE INDEX idx_entidades_muni  ON dim_entidades(municipio_id);
 CREATE INDEX idx_entidades_depto ON dim_entidades(departamento_id);
+
+CREATE TABLE IF NOT EXISTS dim_entidades_coactivas (
+    entidad_id          INTEGER PRIMARY KEY,
+    nombre_extraido     VARCHAR(500) NOT NULL,
+    nombre_real         VARCHAR(500),
+    ciudad              VARCHAR(150),
+    email_extraido      VARCHAR(200),
+    email_real          VARCHAR(200),
+    nit                 VARCHAR(50),
+    cod_institucion     VARCHAR(50),
+    orden               VARCHAR(50),
+    sector              VARCHAR(100),
+    naturaleza_juridica VARCHAR(100),
+    tipo_institucion    VARCHAR(100),
+    direccion           VARCHAR(500),
+    telefono            VARCHAR(100),
+    pagina_web          VARCHAR(200),
+    estado              VARCHAR(30),
+    representante       VARCHAR(200),
+    cargo_representante VARCHAR(200),
+    total_registros     INTEGER DEFAULT 0,
+    FOREIGN KEY (entidad_id) REFERENCES dim_entidades(entidad_id)
+);
+
+CREATE TABLE IF NOT EXISTS dim_entidades_judiciales (
+    entidad_id          INTEGER PRIMARY KEY,
+    nombre_extraido     VARCHAR(500) NOT NULL,
+    nombre_real         VARCHAR(500),
+    ciudad              VARCHAR(150),
+    email_extraido      VARCHAR(200),
+    email_real          VARCHAR(200),
+    codigo_despacho     VARCHAR(20),
+    numero_despacho     VARCHAR(20),
+    jurisdiccion        VARCHAR(50),
+    distrito            VARCHAR(100),
+    circuito            VARCHAR(100),
+    juez                VARCHAR(200),
+    direccion           VARCHAR(500),
+    telefono            VARCHAR(100),
+    area                VARCHAR(50),
+    total_registros     INTEGER DEFAULT 0,
+    FOREIGN KEY (entidad_id) REFERENCES dim_entidades(entidad_id)
+);
 
 CREATE TABLE IF NOT EXISTS dim_variantes (
     variante_id         INTEGER PRIMARY KEY,
@@ -72,37 +129,9 @@ CREATE TABLE IF NOT EXISTS fact_oficios (
     FOREIGN KEY (departamento_id)      REFERENCES dim_departamentos(departamento_id)
 );
 CREATE INDEX idx_oficios_entidad ON fact_oficios(entidad_remitente_id);
-CREATE INDEX idx_oficios_estado ON fact_oficios(estado);
-CREATE INDEX idx_oficios_muni ON fact_oficios(municipio_id);
-CREATE INDEX idx_oficios_depto ON fact_oficios(departamento_id);
-CREATE INDEX idx_oficios_fecha ON fact_oficios(fecha_oficio);
+CREATE INDEX idx_oficios_estado  ON fact_oficios(estado);
+CREATE INDEX idx_oficios_muni    ON fact_oficios(municipio_id);
+CREATE INDEX idx_oficios_depto   ON fact_oficios(departamento_id);
+CREATE INDEX idx_oficios_fecha   ON fact_oficios(fecha_oficio);
 
 -- ============================================================
--- VISTAS: Maestro de entidades dividido (judicial / coactiva)
--- ============================================================
-
-CREATE OR REPLACE VIEW vista_entidades_judiciales AS
-SELECT
-    e.entidad_id,
-    e.nombre_normalizado AS nombre_extraido,
-    e.tipo,
-    e.subtipo,
-    m.nombre AS ciudad,
-    e.total_registros
-FROM dim_entidades e
-LEFT JOIN dim_municipios m ON e.municipio_id = m.municipio_id
-WHERE e.tipo IN ('JUZGADO','TRIBUNAL','CORTE','RAMA_JUDICIAL','FISCALIA',
-                 'OFICINA_APOYO','CENTRO_SERVICIOS','DIRECCION_EJECUTIVA');
-
-CREATE OR REPLACE VIEW vista_entidades_coactivas AS
-SELECT
-    e.entidad_id,
-    e.nombre_normalizado AS nombre_extraido,
-    e.tipo,
-    e.subtipo,
-    m.nombre AS ciudad,
-    e.total_registros
-FROM dim_entidades e
-LEFT JOIN dim_municipios m ON e.municipio_id = m.municipio_id
-WHERE e.tipo NOT IN ('JUZGADO','TRIBUNAL','CORTE','RAMA_JUDICIAL','FISCALIA',
-                     'OFICINA_APOYO','CENTRO_SERVICIOS','DIRECCION_EJECUTIVA');

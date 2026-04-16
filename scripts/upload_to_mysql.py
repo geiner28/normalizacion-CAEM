@@ -13,7 +13,7 @@ import pymysql
 HOST = os.environ.get("DB_HOST", "127.0.0.1")
 PORT = int(os.environ.get("DB_PORT", 3306))
 USER = os.environ.get("DB_USER", "producto")
-PASSWORD = os.environ.get("DB_PASSWORD", "")
+PASSWORD = os.environ.get("DB_PASSWORD", os.environ.get("DB_PASS", ""))
 DATABASE = os.environ.get("DB_NAME", "ETL")
 BASE_DIR = os.environ.get("MODEL_DIR", os.path.join(os.path.dirname(__file__), "..", "datos", "modelo_final"))
 
@@ -21,6 +21,8 @@ BASE_DIR = os.environ.get("MODEL_DIR", os.path.join(os.path.dirname(__file__), "
 DDL_STATEMENTS = [
     "DROP TABLE IF EXISTS fact_oficios",
     "DROP TABLE IF EXISTS dim_variantes",
+    "DROP TABLE IF EXISTS dim_entidades_coactivas",
+    "DROP TABLE IF EXISTS dim_entidades_judiciales",
     "DROP TABLE IF EXISTS dim_entidades",
     "DROP TABLE IF EXISTS dim_municipios",
     "DROP TABLE IF EXISTS dim_departamentos",
@@ -43,17 +45,76 @@ DDL_STATEMENTS = [
     CREATE TABLE dim_entidades (
         entidad_id          INT PRIMARY KEY,
         nombre_normalizado  VARCHAR(500) NOT NULL,
+        nombre_real         VARCHAR(500),
         tipo                VARCHAR(50),
         subtipo             VARCHAR(50),
+        categoria           VARCHAR(20),
+        nit                 VARCHAR(50),
+        cod_institucion     VARCHAR(50),
+        email               VARCHAR(200),
+        direccion           VARCHAR(500),
+        telefono            VARCHAR(100),
+        ciudad              VARCHAR(150),
         municipio_id        INT,
         departamento_id     INT,
+        orden               VARCHAR(50),
+        sector              VARCHAR(100),
+        naturaleza_juridica VARCHAR(100),
+        estado              VARCHAR(30),
+        representante       VARCHAR(200),
         total_registros     INT DEFAULT 0,
         num_variantes       INT DEFAULT 0,
         FOREIGN KEY (municipio_id)    REFERENCES dim_municipios(municipio_id),
         FOREIGN KEY (departamento_id) REFERENCES dim_departamentos(departamento_id),
         INDEX idx_entidades_tipo (tipo),
+        INDEX idx_entidades_cat (categoria),
         INDEX idx_entidades_muni (municipio_id),
         INDEX idx_entidades_depto (departamento_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    """,
+    """
+    CREATE TABLE dim_entidades_coactivas (
+        entidad_id          INT PRIMARY KEY,
+        nombre_extraido     VARCHAR(500) NOT NULL,
+        nombre_real         VARCHAR(500),
+        ciudad              VARCHAR(150),
+        email_extraido      VARCHAR(200),
+        email_real          VARCHAR(200),
+        nit                 VARCHAR(50),
+        cod_institucion     VARCHAR(50),
+        orden               VARCHAR(50),
+        sector              VARCHAR(100),
+        naturaleza_juridica VARCHAR(100),
+        tipo_institucion    VARCHAR(100),
+        direccion           VARCHAR(500),
+        telefono            VARCHAR(100),
+        pagina_web          VARCHAR(200),
+        estado              VARCHAR(30),
+        representante       VARCHAR(200),
+        cargo_representante VARCHAR(200),
+        total_registros     INT DEFAULT 0,
+        FOREIGN KEY (entidad_id) REFERENCES dim_entidades(entidad_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+    """,
+    """
+    CREATE TABLE dim_entidades_judiciales (
+        entidad_id          INT PRIMARY KEY,
+        nombre_extraido     VARCHAR(500) NOT NULL,
+        nombre_real         VARCHAR(500),
+        ciudad              VARCHAR(150),
+        email_extraido      VARCHAR(200),
+        email_real          VARCHAR(200),
+        codigo_despacho     VARCHAR(20),
+        numero_despacho     VARCHAR(20),
+        jurisdiccion        VARCHAR(50),
+        distrito            VARCHAR(100),
+        circuito            VARCHAR(100),
+        juez                VARCHAR(200),
+        direccion           VARCHAR(500),
+        telefono            VARCHAR(100),
+        area                VARCHAR(50),
+        total_registros     INT DEFAULT 0,
+        FOREIGN KEY (entidad_id) REFERENCES dim_entidades(entidad_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     """,
     """
@@ -172,21 +233,109 @@ def load_entidades(cursor):
         (
             safe_int(r["entidad_id"]),
             r["nombre_normalizado"],
+            safe_str(r.get("nombre_real")),
             safe_str(r.get("tipo")),
             safe_str(r.get("subtipo")),
+            safe_str(r.get("categoria")),
+            safe_str(r.get("nit")),
+            safe_str(r.get("cod_institucion")),
+            safe_str(r.get("email")),
+            safe_str(r.get("direccion")),
+            safe_str(r.get("telefono")),
+            safe_str(r.get("ciudad")),
             safe_int(r.get("municipio_id")),
             safe_int(r.get("departamento_id")),
+            safe_str(r.get("orden")),
+            safe_str(r.get("sector")),
+            safe_str(r.get("naturaleza_juridica")),
+            safe_str(r.get("estado")),
+            safe_str(r.get("representante")),
             safe_int(r.get("total_registros")),
             safe_int(r.get("num_variantes")),
         )
         for r in rows
     ]
     sql = """INSERT INTO dim_entidades
-             (entidad_id, nombre_normalizado, tipo, subtipo,
-              municipio_id, departamento_id, total_registros, num_variantes)
-             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+             (entidad_id, nombre_normalizado, nombre_real, tipo, subtipo,
+              categoria, nit, cod_institucion, email, direccion, telefono,
+              ciudad, municipio_id, departamento_id, orden, sector,
+              naturaleza_juridica, estado, representante,
+              total_registros, num_variantes)
+             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
     insert_batch(cursor, sql, data)
     print(f"  ✅ {len(data)} entidades cargadas")
+
+
+def load_entidades_coactivas(cursor):
+    print("\n📦 Cargando dim_entidades_coactivas...", flush=True)
+    rows = load_csv("dim_entidades_coactivas.csv")
+    data = [
+        (
+            safe_int(r["entidad_id"]),
+            r["nombre_extraido"],
+            safe_str(r.get("nombre_real")),
+            safe_str(r.get("ciudad")),
+            safe_str(r.get("email_extraido")),
+            safe_str(r.get("email_real")),
+            safe_str(r.get("nit")),
+            safe_str(r.get("cod_institucion")),
+            safe_str(r.get("orden")),
+            safe_str(r.get("sector")),
+            safe_str(r.get("naturaleza_juridica")),
+            safe_str(r.get("tipo_institucion")),
+            safe_str(r.get("direccion")),
+            safe_str(r.get("telefono")),
+            safe_str(r.get("pagina_web")),
+            safe_str(r.get("estado")),
+            safe_str(r.get("representante")),
+            safe_str(r.get("cargo_representante")),
+            safe_int(r.get("total_registros")),
+        )
+        for r in rows
+    ]
+    sql = """INSERT INTO dim_entidades_coactivas
+             (entidad_id, nombre_extraido, nombre_real, ciudad,
+              email_extraido, email_real, nit, cod_institucion,
+              orden, sector, naturaleza_juridica, tipo_institucion,
+              direccion, telefono, pagina_web, estado,
+              representante, cargo_representante, total_registros)
+             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+    insert_batch(cursor, sql, data)
+    print(f"  ✅ {len(data)} entidades coactivas cargadas")
+
+
+def load_entidades_judiciales(cursor):
+    print("\n📦 Cargando dim_entidades_judiciales...", flush=True)
+    rows = load_csv("dim_entidades_judiciales.csv")
+    data = [
+        (
+            safe_int(r["entidad_id"]),
+            r["nombre_extraido"],
+            safe_str(r.get("nombre_real")),
+            safe_str(r.get("ciudad")),
+            safe_str(r.get("email_extraido")),
+            safe_str(r.get("email_real")),
+            safe_str(r.get("codigo_despacho")),
+            safe_str(r.get("numero_despacho")),
+            safe_str(r.get("jurisdiccion")),
+            safe_str(r.get("distrito")),
+            safe_str(r.get("circuito")),
+            safe_str(r.get("juez")),
+            safe_str(r.get("direccion")),
+            safe_str(r.get("telefono")),
+            safe_str(r.get("area")),
+            safe_int(r.get("total_registros")),
+        )
+        for r in rows
+    ]
+    sql = """INSERT INTO dim_entidades_judiciales
+             (entidad_id, nombre_extraido, nombre_real, ciudad,
+              email_extraido, email_real, codigo_despacho, numero_despacho,
+              jurisdiccion, distrito, circuito, juez,
+              direccion, telefono, area, total_registros)
+             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+    insert_batch(cursor, sql, data)
+    print(f"  ✅ {len(data)} entidades judiciales cargadas")
 
 
 def load_variantes(cursor):
@@ -316,6 +465,12 @@ def main():
         load_entidades(cursor)
         conn.commit()
 
+        load_entidades_coactivas(cursor)
+        conn.commit()
+
+        load_entidades_judiciales(cursor)
+        conn.commit()
+
         load_variantes(cursor)
         conn.commit()
 
@@ -343,6 +498,7 @@ def main():
 
     tables = [
         "dim_departamentos", "dim_municipios", "dim_entidades",
+        "dim_entidades_coactivas", "dim_entidades_judiciales",
         "dim_variantes", "fact_oficios"
     ]
     for t in tables:
